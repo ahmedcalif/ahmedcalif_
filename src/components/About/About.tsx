@@ -1,4 +1,4 @@
-import SkillsGallery from "@/components/About/SkilsGallery"; // Import the SkillsGallery component
+import IconCarousel from "@/components/About/SkilsCarosuel";
 
 export function About() {
   const aboutMessage = [
@@ -10,17 +10,16 @@ export function About() {
         my technical expertise to deliver cutting-edge applications.`,
   ];
 
-  // Images for the gallery - coding-related images
   const skillImages: string[] = [
-    "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?q=80&w=2070&auto=format&fit=crop", // React
-    "https://images.unsplash.com/photo-1599069692562-9539b6b2a73f?q=80&w=1948&auto=format&fit=crop", // Next.js
-    "https://images.unsplash.com/photo-1598425237654-4fc758e50a93?q=80&w=2069&auto=format&fit=crop", // TypeScript
-    "https://images.unsplash.com/photo-1673748639541-fc1a7d432232?q=80&w=2070&auto=format&fit=crop", // Node.js
-    "https://images.unsplash.com/photo-1621839673705-6617adf9e890?q=80&w=2069&auto=format&fit=crop", // Tailwind CSS
-    "https://images.unsplash.com/photo-1619410283995-43d9134e7656?q=80&w=2070&auto=format&fit=crop", // JavaScript
-    "https://images.unsplash.com/photo-1597239451147-f163438ada6f?q=80&w=2034&auto=format&fit=crop", // HTML/CSS
-    "https://images.unsplash.com/photo-1629904853893-c2c8c2417d1c?q=80&w=2070&auto=format&fit=crop", // Git
-    "https://images.unsplash.com/photo-1599507593499-a3f7d7d97667?q=80&w=2070&auto=format&fit=crop", // Docker
+    "/react-2.svg",
+    "next.svg",
+    "typescript.svg",
+    "nodejs.svg",
+    "tailwind-css-2.svg",
+    "css-3.svg",
+    "html-1.svg",
+    "git-icon.svg",
+    "docker-3.svg",
   ];
 
   return (
@@ -56,10 +55,12 @@ export function About() {
             Technical Skills
           </h2>
           <div>
-            <SkillsGallery
+            <IconCarousel
               autoplay={true}
-              pauseOnHover={true}
+              autoplaySpeed={2000}
               images={skillImages}
+              slidesToShow={5}
+              imageSize={180}
             />
           </div>
         </div>
