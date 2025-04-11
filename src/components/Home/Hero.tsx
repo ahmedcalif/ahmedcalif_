@@ -7,7 +7,6 @@ const Hero: React.FC = () => {
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  // Code to display
   const codeLines: string[] = [
     "import { useState, useEffect } from 'react';",
     "import { motion } from 'framer-motion';",
@@ -20,11 +19,10 @@ const Hero: React.FC = () => {
     "    fetchProjects().then(data => setProjects(data));",
     "  }, []);",
     "",
-    '  return "<Ahmed.Projects />";', // Using quotes to avoid TS errors
+    '  return "<Ahmed.Projects />";',
     "};",
   ];
 
-  // Typing animation effect
   useEffect(() => {
     if (!isVisible) {
       setIsVisible(true);
@@ -101,6 +99,7 @@ const Hero: React.FC = () => {
                 <button className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors">
                   View Projects
                 </button>
+
                 <button className="border border-gray-300 px-6 py-3 rounded-md hover:bg-gray-50 transition-colors">
                   Learn More
                 </button>

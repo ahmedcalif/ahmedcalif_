@@ -5,9 +5,15 @@ import { Navbar } from "@/components/Global/Navbar";
 export default function AboutPage() {
   return (
     <>
-      <Navbar />
-      <About />
-      <Footer />
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+
+        <main className="flex-grow">
+          <About />
+        </main>
+
+        <Footer />
+      </div>
     </>
   );
 }
