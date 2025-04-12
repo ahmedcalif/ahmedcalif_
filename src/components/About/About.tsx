@@ -2,12 +2,11 @@ import IconCarousel from "@/components/About/SkilsCarosuel";
 
 export function About() {
   const aboutMessage = [
-    `Hello my name is Ahmed Calif, I am a Full Stack Web Developer based in Vancouver. 
-        I excel in developing profitable and scalable applications.`,
-    `With over 2 years of experience in web development, I create elegant solutions
-        that combine modern design with robust functionality.`,
-    `I'm passionate about building user-centric experiences and continuously expanding
-        my technical expertise to deliver cutting-edge applications.`,
+    `Hello, my name is Ahmed Calif. I’m an aspiring full-stack developer who recently completed my diploma in web development at BCIT. 
+    I’m passionate about creating production-ready web applications that solve real-world problems.`,
+    `When I’m not coding, you’ll find me on the basketball court, a passion I’ve had since childhood. Basketball taught me the value of teamwork, patience, and performing under pressure, skills that translate perfectly into web development. `,
+    `While I may not be the most naturally gifted player, my love for the game keeps me returning. I bring that same dedication to development. There is nothing quite like creating something that impacts people’s lives. It’s what drives me to keep learning and growing as a developer.`, 
+    `Are you looking for a developer who’s passionate about creating impactful solutions? Let’s connect!`
   ];
 
   const skillImages: string[] = [
@@ -20,6 +19,10 @@ export function About() {
     "html-1.svg",
     "git-icon.svg",
     "docker-3.svg",
+    'C# (CSharp).svg',
+    'dotnet-svgrepo-com.svg',
+    "php-svg-repo-com.svg",
+    "laravel-svgrepo-com.svg"
   ];
 
   return (

@@ -86,7 +86,18 @@ const skills = [
   { name: "CSS3", icon: "/css-3.svg" },
   { name: "Git", icon: "/git-icon.svg" },
   { name: "Docker", icon: "/docker-3.svg" },
+  {name: 'C#', icon: 'csharp.svg'},
+  {name: "Dotnet", icon: "dotnet-svgrepo-com.svg"}, 
+  {name: "PHP", icon: 'php-svgrepo-com.svg'}, 
+  {name: 'Laravel', icon: 'laravel-svgrepo-com.svg' },
+  {name: 'MySQL', icon: 'MySQL.svg'},
+  {name: 'SQLite', icon: 'SQLite.svg'}
+
+
+
 ];
+
+
 
 interface SectionProps {
   id: string;
@@ -469,16 +480,16 @@ export default function Portfolio() {
                 className="space-y-6"
               >
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Hello, I'm Ahmed Calif, a Full Stack Web Developer based in Vancouver.
-                  I excel in developing profitable and scalable applications.
+                Hello, my name is Ahmed Calif. I’m an aspiring full-stack developer who recently completed my diploma in web development at BCIT. I’m passionate about creating production-ready web applications that solve real-world problems. 
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  With over 2 years of experience in web development, I create elegant solutions
-                  that combine modern design with robust functionality.
+                  When I’m not coding, you’ll find me on the basketball court, a passion I’ve had since childhood. Basketball taught me the value of teamwork, patience, and performing under pressure, skills that translate perfectly into web development. 
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  I'm passionate about building user-centric experiences and continuously expanding
-                  my technical expertise to deliver cutting-edge applications.
+                 While I may not be the most naturally gifted player, my love for the game keeps me returning. I bring that same dedication to development. There is nothing quite like creating something that impacts people’s lives. It’s what drives me to keep learning and growing as a developer.
+                </p>
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                  Are you looking for a developer who’s passionate about creating impactful solutions? Let’s connect!
                 </p>
               </motion.div>
 
