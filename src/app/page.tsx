@@ -29,6 +29,8 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ModeToggle } from "@/components/Global/ThemeToggle";
+import { useTheme } from "next-themes";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -105,6 +107,7 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("home");
   const { scrollYProgress } = useScroll();
   const progressBarWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const { theme } = useTheme();
 
   // References for each section
   const homeRef = useRef<HTMLElement | null>(null);
@@ -233,15 +236,15 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-black font-sans">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white font-sans">
       {/* Progress Bar */}
       <motion.div 
-        className="fixed top-0 left-0 right-0 h-1 bg-black z-50" 
+        className="fixed top-0 left-0 right-0 h-1 bg-black dark:bg-white z-50" 
         style={{ width: progressBarWidth }}
       />
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-gray-200 shadow-sm">
+      <nav className="sticky top-0 z-40 w-full bg-white/95 dark:bg-gray-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-950/60 border-b border-gray-200 dark:border-gray-800 shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center">
             <motion.div
@@ -265,14 +268,14 @@ export default function Portfolio() {
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection(item.id)}
-                    className={`text-sm font-medium transition-colors hover:text-black relative ${
-                      activeSection === item.id ? "text-black" : "text-gray-500"
+                    className={`text-sm font-medium transition-colors hover:text-black dark:hover:text-white relative ${
+                      activeSection === item.id ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-400"
                     }`}
                   >
                     {item.label}
                     {activeSection === item.id && (
                       <motion.div
-                        className="absolute -bottom-1 left-0 w-full h-0.5 bg-black"
+                        className="absolute -bottom-1 left-0 w-full h-0.5 bg-black dark:bg-white"
                         layoutId="navbar-indicator"
                       />
                     )}
@@ -284,19 +287,21 @@ export default function Portfolio() {
 
           {/* Social Links */}
           <div className="hidden md:flex items-center space-x-4">
-            <a href="https://github.com/ahmedcalif" className="text-gray-700 hover:text-black transition-colors">
+            <a href="https://github.com/ahmedcalif" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
               <Github size={20} />
             </a>
-            <a href="https://www.linkedin.com/in/ahmedcalif/" className="text-gray-700 hover:text-black transition-colors">
+            <a href="https://www.linkedin.com/in/ahmedcalif/" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
               <Linkedin size={20} />
             </a>
-            <a href="mailto:contact@ahmedcalif.com" className="text-gray-700 hover:text-black transition-colors">
+            <a href="mailto:contact@ahmedcalif.com" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
               <Mail size={20} />
             </a>
+            <ModeToggle />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-4">
+            <ModeToggle />
             <Button
               variant="ghost"
               size="icon"
@@ -319,7 +324,7 @@ export default function Portfolio() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden border-t border-gray-200"
+            className="md:hidden border-t border-gray-200 dark:border-gray-800"
           >
             <div className="space-y-1 px-4 py-5">
               {[
@@ -332,7 +337,7 @@ export default function Portfolio() {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`block w-full text-left py-2 text-base font-medium ${
-                    activeSection === item.id ? "text-black" : "text-gray-500"
+                    activeSection === item.id ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-400"
                   }`}
                 >
                   {item.label}
@@ -340,13 +345,13 @@ export default function Portfolio() {
               ))}
               
               <div className="flex space-x-4 pt-4">
-                <a href="https://github.com/ahmedcalif" className="text-gray-700 hover:text-black transition-colors">
+                <a href="https://github.com/ahmedcalif" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
                   <Github size={20} />
                 </a>
-                <a href="https://www.linkedin.com/in/ahmedcalif/" className="text-gray-700 hover:text-black transition-colors">
+                <a href="https://www.linkedin.com/in/ahmedcalif/" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
                   <Linkedin size={20} />
                 </a>
-                <a href="mailto:contact@ahmedcalif.com" className="text-gray-700 hover:text-black transition-colors">
+                <a href="mailto:contact@ahmedcalif.com" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
                   <Mail size={20} />
                 </a>
               </div>
@@ -359,7 +364,7 @@ export default function Portfolio() {
         {/* Hero Section */}
         <Section 
           id="home" 
-          className="min-h-screen flex items-center bg-white"
+          className="min-h-screen flex items-center bg-white dark:bg-gray-950"
         >
           <div className="container mx-auto px-6 md:px-12 py-24">
             <div className="flex flex-col-reverse md:flex-row items-center">
@@ -370,22 +375,22 @@ export default function Portfolio() {
                   transition={{ duration: 0.8 }}
                 >
                   <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                    Hi, I'm <span className="bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-500">Ahmed Calif</span>
+                    Hi, I'm <span className="bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-400">Ahmed Calif</span>
                   </h1>
-                  <p className="text-xl text-gray-600 max-w-lg mb-8">
+                  <p className="text-xl text-gray-600 dark:text-gray-300 max-w-lg mb-8">
                     A passionate Full Stack Developer creating clean, efficient, and user-friendly digital experiences.
                   </p>
                   <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <Button 
                       onClick={() => scrollToSection("projects")}
-                      className="bg-black text-white hover:bg-black/90"
+                      className="bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
                     >
                       View Projects
                     </Button>
                     <Button 
                       onClick={() => scrollToSection("contact")}
                       variant="outline"
-                      className="border-gray-300 hover:bg-gray-50"
+                      className="border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       Get in Touch
                     </Button>
@@ -420,9 +425,9 @@ export default function Portfolio() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="relative w-full max-w-md bg-gray-900 rounded-lg shadow-xl overflow-hidden"
+                  className="relative w-full max-w-md bg-gray-900 dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
                 >
-                  <div className="h-6 bg-gray-800 flex items-center px-2">
+                  <div className="h-6 bg-gray-800 dark:bg-gray-700 flex items-center px-2">
                     <div className="w-3 h-3 rounded-full bg-red-500 mr-1.5"></div>
                     <div className="w-3 h-3 rounded-full bg-yellow-500 mr-1.5"></div>
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
@@ -441,7 +446,7 @@ export default function Portfolio() {
         {/* About Section */}
         <Section 
           id="about" 
-          className="py-20 bg-gray-50"
+          className="py-20 bg-gray-50 dark:bg-gray-900"
         >
           <div className="container mx-auto px-6">
             <motion.div
@@ -452,7 +457,7 @@ export default function Portfolio() {
               className="text-center mb-16"
             >
               <h2 className="text-3xl font-bold mb-4">About Me</h2>
-              <div className="h-1 w-20 bg-black mx-auto"></div>
+              <div className="h-1 w-20 bg-black dark:bg-white mx-auto"></div>
             </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -463,15 +468,15 @@ export default function Portfolio() {
                 viewport={{ once: true }}
                 className="space-y-6"
               >
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                   Hello, I'm Ahmed Calif, a Full Stack Web Developer based in Vancouver.
                   I excel in developing profitable and scalable applications.
                 </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                   With over 2 years of experience in web development, I create elegant solutions
                   that combine modern design with robust functionality.
                 </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                   I'm passionate about building user-centric experiences and continuously expanding
                   my technical expertise to deliver cutting-edge applications.
                 </p>
@@ -492,7 +497,7 @@ export default function Portfolio() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: index * 0.1 }}
                       viewport={{ once: true }}
-                      className="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                      className="flex flex-col items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="h-12 w-12 p-2 relative mb-3">
                         <Image
@@ -503,7 +508,7 @@ export default function Portfolio() {
                           className="object-contain"
                         />
                       </div>
-                      <p className="text-sm font-medium text-gray-600">{skill.name}</p>
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{skill.name}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -515,7 +520,7 @@ export default function Portfolio() {
         {/* Projects Section */}
         <Section 
           id="projects" 
-          className="py-20"
+          className="py-20 bg-white dark:bg-gray-950"
         >
           <div className="container mx-auto px-6">
             <motion.div
@@ -526,8 +531,8 @@ export default function Portfolio() {
               className="text-center mb-16"
             >
               <h2 className="text-3xl font-bold mb-4">My Projects</h2>
-              <div className="h-1 w-20 bg-black mx-auto"></div>
-              <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+              <div className="h-1 w-20 bg-black dark:bg-white mx-auto"></div>
+              <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                 Here are some of my recent projects. Each one represents a unique challenge and solution.
               </p>
             </motion.div>
@@ -541,7 +546,7 @@ export default function Portfolio() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                  <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200 dark:border-gray-800">
                     <div className="relative h-48 w-full overflow-hidden">
                       <Image
                         src={project.image}
@@ -552,23 +557,23 @@ export default function Portfolio() {
                     </div>
                     <CardHeader>
                       <CardTitle>{project.title}</CardTitle>
-                      <CardDescription>{project.description}</CardDescription>
+                      <CardDescription className="dark:text-gray-400">{project.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {project.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary">{tag}</Badge>
+                          <Badge key={tag} variant="secondary" className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">{tag}</Badge>
                         ))}
                       </div>
                     </CardContent>
                     <CardFooter className="justify-between">
-                      <Button variant="outline" size="sm" asChild>
+                      <Button variant="outline" size="sm" asChild className="border-gray-300 dark:border-gray-700">
                         <a href={project.github} target="_blank" rel="noopener noreferrer">
                           <Github className="mr-2 h-4 w-4" />
                           Code
                         </a>
                       </Button>
-                      <Button size="sm" asChild>
+                      <Button size="sm" asChild className="bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90">
                         <a href={project.link} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="mr-2 h-4 w-4" />
                           Live Demo
@@ -585,7 +590,7 @@ export default function Portfolio() {
         {/* Contact Section */}
         <Section 
           id="contact" 
-          className="py-20 bg-gray-50"
+          className="py-20 bg-gray-50 dark:bg-gray-900"
         >
           <div className="container mx-auto px-6">
             <motion.div
@@ -596,8 +601,8 @@ export default function Portfolio() {
               className="max-w-2xl mx-auto text-center mb-12"
             >
               <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
-              <div className="h-1 w-20 bg-black mx-auto mb-4"></div>
-              <p className="text-lg text-gray-600">
+              <div className="h-1 w-20 bg-black dark:bg-white mx-auto mb-4"></div>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
                 Interested in collaborating or commissioning a piece? Let's create something amazing together.
               </p>
             </motion.div>
@@ -664,7 +669,7 @@ export default function Portfolio() {
                       />
                       <Button 
                         type="submit" 
-                        className="w-full bg-black hover:bg-black/90 text-white"
+                        className="w-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
                       >
                         Send Message
                       </Button>
@@ -678,7 +683,7 @@ export default function Portfolio() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black text-white py-8">
+      <footer className="bg-black text-white dark:bg-gray-900 py-8">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
