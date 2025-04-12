@@ -9,8 +9,8 @@ import Link from "next/link";
 
 const navas = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
+  { href: "/#", label: "About" },
+  { href: "/#", label: "Projects" },
 ];
 
 export function Navbar() {
