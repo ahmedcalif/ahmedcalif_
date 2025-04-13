@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import Link from "next/link";
@@ -7,7 +6,17 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ChevronDown, Menu, X, Github, Linkedin, Mail, ExternalLink } from "lucide-react";
+import {
+  ChevronDown,
+  Menu,
+  X,
+  Github,
+  Linkedin,
+  Mail,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,17 +29,42 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ModeToggle } from "@/components/Global/ThemeToggle";
 import { useTheme } from "next-themes";
+
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  image: string;
+  link?: string;
+  github?: string;
+}
+
+interface Skill {
+  name: string;
+  icon: string;
+}
+
+interface SectionProps {
+  id: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+interface ProjectCarouselProps {
+  projects: Project[];
+}
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -44,39 +78,60 @@ const formSchema = z.object({
   }),
 });
 
-// Sample Project data - replace with your actual projects
-const projects = [
+type FormValues = z.infer<typeof formSchema>;
+
+const projects: Project[] = [
   {
     id: 1,
-    title: "E-commerce Platform",
-    description: "A full-stack e-commerce platform with payment integration and admin dashboard.",
-    tags: ["React", "Node.js", "MongoDB", "Stripe"],
-    image: "/api/placeholder/600/400",
-    link: "#",
-    github: "#",
+    title: "SQLLearn",
+    description:
+      "A full-stack MySQL learning platform with student progress ability",
+    tags: ["React", "TypeScript", "MySQL", "Hono", "Tailwind CSS"],
+    image: "sql.svg",
+    link: "https://learnsql-production.up.railway.app/",
   },
   {
     id: 2,
-    title: "Task Management App",
-    description: "A collaborative task management application with real-time updates.",
-    tags: ["Next.js", "TypeScript", "Tailwind", "Supabase"],
-    image: "/api/placeholder/600/400",
-    link: "#",
-    github: "#",
+    title: "ReachOut",
+    description:
+      "An AI-Powered job searching app for individuals affected by the justice system.",
+    tags: ["Next.js", "TypeScript", "Tailwind", "SQLite", "AWS", "Azure AI"],
+    image: "logo.svg",
+    link: "https://wereachout.ca ",
+    github: "https://github.com/mangaslave/ReachOut",
   },
   {
     id: 3,
-    title: "Portfolio Website",
-    description: "A responsive portfolio website with animations and contact form.",
-    tags: ["React", "Framer Motion", "Tailwind CSS"],
-    image: "/api/placeholder/600/400",
-    link: "#",
-    github: "#",
+    title: "Crafters Connect",
+    description:
+      "A collaborative platform for any and all Do-It-Yourself projects from home improvement to everyday crafting",
+    tags: ["JavaScript", "ExpressJs", "CSS", "HTML", "Drizzle"],
+    image: "CraftersConnectLogo.svg",
+    link: "https://craftersconnect-1.onrender.com/",
+    github: "https://github.com/ahmedcalif/CraftersConnect",
+  },
+  {
+    id: 5,
+    title: "BankingApp",
+    description:
+      "A productivity app with task categorization, reminders and progress tracking",
+    tags: ["React Native", "Expo", "TypeScript"],
+    image: "money-svgrepo-com.svg",
+    github: "https://github.com/ahmedcalif/React-Native-Bank-App",
+  },
+  {
+    id: 6,
+    title: "ArticleOS",
+    description:
+      "Discover and save recipes based on available ingredients and dietary preferences",
+    tags: ["PHP", "Laravel", "React", "MySQL", "Tailwind CSS"],
+    image: "linuxlogo.svg",
+    link: "/in-progress",
+    github: "https://github.com/ahmedcalif/ArticleOS",
   },
 ];
 
-// Technical skills
-const skills = [
+const skills: Skill[] = [
   { name: "React", icon: "/react-2.svg" },
   { name: "Next.js", icon: "/next.svg" },
   { name: "TypeScript", icon: "/typescript.svg" },
@@ -86,24 +141,191 @@ const skills = [
   { name: "CSS3", icon: "/css-3.svg" },
   { name: "Git", icon: "/git-icon.svg" },
   { name: "Docker", icon: "/docker-3.svg" },
-  {name: 'C#', icon: 'csharp.svg'},
-  {name: "Dotnet", icon: "dotnet-svgrepo-com.svg"}, 
-  {name: "PHP", icon: 'php-svgrepo-com.svg'}, 
-  {name: 'Laravel', icon: 'laravel-svgrepo-com.svg' },
-  {name: 'MySQL', icon: 'MySQL.svg'},
-  {name: 'SQLite', icon: 'SQLite.svg'}
-
-
-
+  { name: "C#", icon: "/csharp.svg" },
+  { name: "Dotnet", icon: "/dotnet-svgrepo-com.svg" },
+  { name: "PHP", icon: "/php-svgrepo-com.svg" },
+  { name: "Laravel", icon: "/laravel-svgrepo-com.svg" },
+  { name: "MySQL", icon: "/MySQL.svg" },
+  { name: "SQLite", icon: "/SQLite.svg" },
 ];
 
+// Updated ProjectCarousel component with fixed image display to match the dark design
+const ProjectCarousel: React.FC<ProjectCarouselProps> = ({ projects }) => {
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [projectsPerPage, setProjectsPerPage] = useState<number>(3);
 
+  useEffect(() => {
+    const handleResize = (): void => {
+      if (window.innerWidth < 768) {
+        setProjectsPerPage(1);
+      } else if (window.innerWidth < 1024) {
+        setProjectsPerPage(2);
+      } else {
+        setProjectsPerPage(3);
+      }
+    };
 
-interface SectionProps {
-  id: string;
-  children: React.ReactNode;
-  className?: string;
-}
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
+  const visibleProjects = projects.slice(
+    currentPage * projectsPerPage,
+    (currentPage + 1) * projectsPerPage
+  );
+
+  const nextPage = (): void => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = (): void => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  return (
+    <div className="relative w-full py-8">
+      <div className="flex justify-between absolute top-1/2 -translate-y-1/2 w-full px-4 z-10">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={prevPage}
+          disabled={currentPage === 0}
+          className="rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md hover:bg-white dark:hover:bg-gray-800"
+        >
+          <ChevronLeft size={24} />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={nextPage}
+          disabled={currentPage >= totalPages - 1}
+          className="rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md hover:bg-white dark:hover:bg-gray-800"
+        >
+          <ChevronRight size={24} />
+        </Button>
+      </div>
+
+      <motion.div
+        key={currentPage}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.3 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
+        {visibleProjects.map((project) => (
+          <div
+            key={project.id}
+            className="flex flex-col rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300"
+          >
+            {/* Top image section */}
+            <div className="relative h-48 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center p-4">
+              <div className="w-full h-full flex items-center justify-center">
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  width={200}
+                  height={150}
+                  className="object-contain max-h-40 max-w-full"
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+            </div>
+
+            {/* Content section */}
+            <div className="p-6 flex flex-col flex-grow">
+              <div className="mb-4">
+                <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  {project.description}
+                </p>
+              </div>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mt-auto mb-4">
+                {project.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-md px-2 py-0.5 text-xs"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+
+              {/* Buttons */}
+              <div className="mt-auto flex justify-between">
+                {project.github && project.github !== "#" ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="border-gray-300 dark:border-gray-700 rounded"
+                  >
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <Github className="mr-2 h-4 w-4" />
+                      Code
+                    </a>
+                  </Button>
+                ) : (
+                  <div></div> /* Empty div to maintain spacing */
+                )}
+
+                {project.link && project.link !== "#" ? (
+                  <Button
+                    size="sm"
+                    asChild
+                    className="bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 rounded"
+                  >
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      Live Demo
+                    </a>
+                  </Button>
+                ) : (
+                  <div></div> /* Empty div to maintain spacing */
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </motion.div>
+
+      <div className="flex justify-center mt-8 gap-2">
+        {Array.from({ length: totalPages }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index)}
+            className={`h-2 rounded-full transition-all ${
+              index === currentPage
+                ? "w-6 bg-black dark:bg-white"
+                : "w-2 bg-gray-300 dark:bg-gray-700"
+            }`}
+            aria-label={`Go to page ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Section: React.FC<SectionProps> = ({ id, children, className = "" }) => {
   return (
@@ -113,26 +335,28 @@ const Section: React.FC<SectionProps> = ({ id, children, className = "" }) => {
   );
 };
 
-export default function Portfolio() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+export default function Portfolio(): React.ReactElement {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [activeSection, setActiveSection] = useState<string>("home");
   const { scrollYProgress } = useScroll();
-  const progressBarWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const progressBarWidth = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ["0%", "100%"]
+  );
   const { theme } = useTheme();
 
-  // References for each section
   const homeRef = useRef<HTMLElement | null>(null);
   const aboutRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
   const contactRef = useRef<HTMLElement | null>(null);
-  
+
   const homeInView = useInView(homeRef, { amount: 0.5 });
   const aboutInView = useInView(aboutRef, { amount: 0.5 });
   const projectsInView = useInView(projectsRef, { amount: 0.5 });
   const contactInView = useInView(contactRef, { amount: 0.5 });
 
   useEffect(() => {
-    // Assign refs to DOM elements when component mounts
     homeRef.current = document.getElementById("home");
     aboutRef.current = document.getElementById("about");
     projectsRef.current = document.getElementById("projects");
@@ -146,8 +370,7 @@ export default function Portfolio() {
     else if (contactInView) setActiveSection("contact");
   }, [homeInView, aboutInView, projectsInView, contactInView]);
 
-  // Form handling
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -156,15 +379,13 @@ export default function Portfolio() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: FormValues): void {
     console.log(values);
-    // Add your form submission logic here
     alert("Form submitted successfully! (This is a demo alert)");
     form.reset();
   }
 
-  // Code lines for the typing animation in Hero section
-  const codeLines = [
+  const codeLines: string[] = [
     "import { useState, useEffect } from 'react';",
     "import { motion } from 'framer-motion';",
     "",
@@ -180,10 +401,9 @@ export default function Portfolio() {
     "};",
   ];
 
-  // Typing effect
-  const [text, setText] = useState("");
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [text, setText] = useState<string>("");
+  const [currentLineIndex, setCurrentLineIndex] = useState<number>(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
 
   useEffect(() => {
     if (currentLineIndex < codeLines.length) {
@@ -207,8 +427,7 @@ export default function Portfolio() {
     }
   }, [currentLineIndex, currentCharIndex]);
 
-  // Code highlighting function
-  const applyCodeHighlighting = (code: string) => {
+  const applyCodeHighlighting = (code: string): React.ReactNode => {
     const highlightedCode = code
       .replace(
         /import|export|from|const|let|var|return|function/g,
@@ -238,23 +457,21 @@ export default function Portfolio() {
     return <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />;
   };
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = (id: string): void => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white font-sans">
-      {/* Progress Bar */}
-      <motion.div 
-        className="fixed top-0 left-0 right-0 h-1 bg-black dark:bg-white z-50" 
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-black dark:bg-white z-50"
         style={{ width: progressBarWidth }}
       />
 
-      {/* Navigation */}
       <nav className="sticky top-0 z-40 w-full bg-white/95 dark:bg-gray-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-950/60 border-b border-gray-200 dark:border-gray-800 shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center">
@@ -267,7 +484,6 @@ export default function Portfolio() {
             </motion.div>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:block">
             <ul className="flex space-x-8">
               {[
@@ -280,7 +496,9 @@ export default function Portfolio() {
                   <button
                     onClick={() => scrollToSection(item.id)}
                     className={`text-sm font-medium transition-colors hover:text-black dark:hover:text-white relative ${
-                      activeSection === item.id ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-400"
+                      activeSection === item.id
+                        ? "text-black dark:text-white"
+                        : "text-gray-500 dark:text-gray-400"
                     }`}
                   >
                     {item.label}
@@ -296,21 +514,28 @@ export default function Portfolio() {
             </ul>
           </div>
 
-          {/* Social Links */}
           <div className="hidden md:flex items-center space-x-4">
-            <a href="https://github.com/ahmedcalif" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+            <a
+              href="https://github.com/ahmedcalif"
+              className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+            >
               <Github size={20} />
             </a>
-            <a href="https://www.linkedin.com/in/ahmedcalif/" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+            <a
+              href="https://www.linkedin.com/in/ahmedcalif/"
+              className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+            >
               <Linkedin size={20} />
             </a>
-            <a href="mailto:contact@ahmedcalif.com" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+            <a
+              href="mailto:ahmedcalif2003@gmail.com"
+              className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+            >
               <Mail size={20} />
             </a>
             <ModeToggle />
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
             <ModeToggle />
             <Button
@@ -328,7 +553,6 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -348,21 +572,32 @@ export default function Portfolio() {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`block w-full text-left py-2 text-base font-medium ${
-                    activeSection === item.id ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-400"
+                    activeSection === item.id
+                      ? "text-black dark:text-white"
+                      : "text-gray-500 dark:text-gray-400"
                   }`}
                 >
                   {item.label}
                 </button>
               ))}
-              
+
               <div className="flex space-x-4 pt-4">
-                <a href="https://github.com/ahmedcalif" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+                <a
+                  href="https://github.com/ahmedcalif"
+                  className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+                >
                   <Github size={20} />
                 </a>
-                <a href="https://www.linkedin.com/in/ahmedcalif/" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+                <a
+                  href="https://www.linkedin.com/in/ahmedcalif/"
+                  className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+                >
                   <Linkedin size={20} />
                 </a>
-                <a href="mailto:contact@ahmedcalif.com" className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+                <a
+                  href="mailto:ahmedcalif2003@gmail.com"
+                  className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+                >
                   <Mail size={20} />
                 </a>
               </div>
@@ -372,9 +607,8 @@ export default function Portfolio() {
       </nav>
 
       <main className="flex-grow">
-        {/* Hero Section */}
-        <Section 
-          id="home" 
+        <Section
+          id="home"
           className="min-h-screen flex items-center bg-white dark:bg-gray-950"
         >
           <div className="container mx-auto px-6 md:px-12 py-24">
@@ -386,19 +620,23 @@ export default function Portfolio() {
                   transition={{ duration: 0.8 }}
                 >
                   <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                    Hi, I'm <span className="bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-400">Ahmed Calif</span>
+                    Hi, I'm{" "}
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-400">
+                      Ahmed Calif
+                    </span>
                   </h1>
                   <p className="text-xl text-gray-600 dark:text-gray-300 max-w-lg mb-8">
-                    A passionate Full Stack Developer creating clean, efficient, and user-friendly digital experiences.
+                    A passionate Full Stack Developer creating clean, efficient,
+                    and user-friendly digital experiences.
                   </p>
                   <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <Button 
+                    <Button
                       onClick={() => scrollToSection("projects")}
                       className="bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
                     >
                       View Projects
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => scrollToSection("contact")}
                       variant="outline"
                       className="border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -407,7 +645,7 @@ export default function Portfolio() {
                     </Button>
                   </div>
                 </motion.div>
-                
+
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -419,8 +657,8 @@ export default function Portfolio() {
                     transition={{ repeat: Infinity, duration: 2 }}
                     className="flex justify-center md:justify-start"
                   >
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="icon"
                       onClick={() => scrollToSection("about")}
                       className="rounded-full"
@@ -454,11 +692,7 @@ export default function Portfolio() {
           </div>
         </Section>
 
-        {/* About Section */}
-        <Section 
-          id="about" 
-          className="py-20 bg-gray-50 dark:bg-gray-900"
-        >
+        <Section id="about" className="py-20 bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -480,16 +714,27 @@ export default function Portfolio() {
                 className="space-y-6"
               >
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                Hello, my name is Ahmed Calif. I’m an aspiring full-stack developer who recently completed my diploma in web development at BCIT. I’m passionate about creating production-ready web applications that solve real-world problems. 
+                  Hello, my name is Ahmed Calif. I'm an aspiring full-stack
+                  developer who recently completed my diploma in web development
+                  at BCIT. I'm passionate about creating production-ready web
+                  applications that solve real-world problems.
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  When I’m not coding, you’ll find me on the basketball court, a passion I’ve had since childhood. Basketball taught me the value of teamwork, patience, and performing under pressure, skills that translate perfectly into web development. 
+                  When I'm not coding, you'll find me on the basketball court, a
+                  passion I've had since childhood. Basketball taught me the
+                  value of teamwork, patience, and performing under pressure,
+                  skills that translate perfectly into web development.
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                 While I may not be the most naturally gifted player, my love for the game keeps me returning. I bring that same dedication to development. There is nothing quite like creating something that impacts people’s lives. It’s what drives me to keep learning and growing as a developer.
+                  While I may not be the most naturally gifted player, my love
+                  for the game keeps me returning. I bring that same dedication
+                  to development. There is nothing quite like creating something
+                  that impacts people's lives. It's what drives me to keep
+                  learning and growing as a developer.
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Are you looking for a developer who’s passionate about creating impactful solutions? Let’s connect!
+                  Are you looking for a developer who's passionate about
+                  creating impactful solutions? Let's connect!
                 </p>
               </motion.div>
 
@@ -499,7 +744,9 @@ export default function Portfolio() {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <h3 className="text-2xl font-semibold mb-6 lg:text-center">Technical Skills</h3>
+                <h3 className="text-2xl font-semibold mb-6 lg:text-center">
+                  Technical Skills
+                </h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-6">
                   {skills.map((skill, index) => (
                     <motion.div
@@ -519,7 +766,9 @@ export default function Portfolio() {
                           className="object-contain"
                         />
                       </div>
-                      <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{skill.name}</p>
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                        {skill.name}
+                      </p>
                     </motion.div>
                   ))}
                 </div>
@@ -528,11 +777,7 @@ export default function Portfolio() {
           </div>
         </Section>
 
-        {/* Projects Section */}
-        <Section 
-          id="projects" 
-          className="py-20 bg-white dark:bg-gray-950"
-        >
+        <Section id="projects" className="py-20 bg-white dark:bg-gray-950">
           <div className="container mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -544,65 +789,23 @@ export default function Portfolio() {
               <h2 className="text-3xl font-bold mb-4">My Projects</h2>
               <div className="h-1 w-20 bg-black dark:bg-white mx-auto"></div>
               <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Here are some of my recent projects. Each one represents a unique challenge and solution.
+                Here are some of my recent projects. Each one represents a
+                unique challenge and solution.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200 dark:border-gray-800">
-                    <div className="relative h-48 w-full overflow-hidden">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        className="object-cover transition-transform duration-500 hover:scale-105"
-                        fill
-                      />
-                    </div>
-                    <CardHeader>
-                      <CardTitle>{project.title}</CardTitle>
-                      <CardDescription className="dark:text-gray-400">{project.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {project.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">{tag}</Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                    <CardFooter className="justify-between">
-                      <Button variant="outline" size="sm" asChild className="border-gray-300 dark:border-gray-700">
-                        <a href={project.github} target="_blank" rel="noopener noreferrer">
-                          <Github className="mr-2 h-4 w-4" />
-                          Code
-                        </a>
-                      </Button>
-                      <Button size="sm" asChild className="bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90">
-                        <a href={project.link} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="mr-2 h-4 w-4" />
-                          Live Demo
-                        </a>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <ProjectCarousel projects={projects} />
+            </motion.div>
           </div>
         </Section>
 
-        {/* Contact Section */}
-        <Section 
-          id="contact" 
-          className="py-20 bg-gray-50 dark:bg-gray-900"
-        >
+        <Section id="contact" className="py-20 bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -614,7 +817,8 @@ export default function Portfolio() {
               <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
               <div className="h-1 w-20 bg-black dark:bg-white mx-auto mb-4"></div>
               <p className="text-lg text-gray-600 dark:text-gray-300">
-                Interested in collaborating or commissioning a piece? Let's create something amazing together.
+                Interested in collaborating or commissioning a piece? Let's
+                create something amazing together.
               </p>
             </motion.div>
 
@@ -628,7 +832,10 @@ export default function Portfolio() {
               <Card className="border-0 shadow-lg">
                 <CardContent className="pt-6">
                   <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-6"
+                    >
                       <FormField
                         control={form.control}
                         name="name"
@@ -636,10 +843,7 @@ export default function Portfolio() {
                           <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                              <Input
-                                placeholder="Your name"
-                                {...field}
-                              />
+                              <Input placeholder="Your name" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -652,10 +856,7 @@ export default function Portfolio() {
                           <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                              <Input
-                                placeholder="your@email.com"
-                                {...field}
-                              />
+                              <Input placeholder="your@email.com" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -678,8 +879,8 @@ export default function Portfolio() {
                           </FormItem>
                         )}
                       />
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         className="w-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
                       >
                         Send Message
@@ -693,7 +894,6 @@ export default function Portfolio() {
         </Section>
       </main>
 
-      {/* Footer */}
       <footer className="bg-black text-white dark:bg-gray-900 py-8">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -703,24 +903,24 @@ export default function Portfolio() {
               </p>
             </div>
             <div className="flex gap-6">
-              <a 
-                href="https://github.com/ahmedcalif" 
+              <a
+                href="https://github.com/ahmedcalif"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-gray-300 transition-colors"
               >
                 <Github size={20} />
               </a>
-              <a 
-                href="https://www.linkedin.com/in/ahmedcalif/" 
+              <a
+                href="https://www.linkedin.com/in/ahmedcalif/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-gray-300 transition-colors"
               >
                 <Linkedin size={20} />
               </a>
-              <a 
-                href="mailto:contact@ahmedcalif.com" 
+              <a
+                href="mailto:contact@ahmedcalif.com"
                 className="text-white hover:text-gray-300 transition-colors"
               >
                 <Mail size={20} />
