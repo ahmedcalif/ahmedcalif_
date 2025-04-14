@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,17 +28,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ModeToggle } from "@/components/Global/ThemeToggle";
-import { useTheme } from "next-themes";
 
 interface Project {
   id: number;
@@ -344,7 +335,6 @@ export default function Portfolio(): React.ReactElement {
     [0, 1],
     ["0%", "100%"]
   );
-  const { theme } = useTheme();
 
   const homeRef = useRef<HTMLElement | null>(null);
   const aboutRef = useRef<HTMLElement | null>(null);
@@ -425,7 +415,7 @@ export default function Portfolio(): React.ReactElement {
         return () => clearTimeout(timer);
       }
     }
-  }, [currentLineIndex, currentCharIndex]);
+  }, [currentLineIndex, currentCharIndex, codeLines]); // Added codeLines to dependency array
 
   const applyCodeHighlighting = (code: string): React.ReactNode => {
     const highlightedCode = code
@@ -620,7 +610,7 @@ export default function Portfolio(): React.ReactElement {
                   transition={{ duration: 0.8 }}
                 >
                   <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                    Hi, I'm{" "}
+                    Hi, I&apos;m{" "}
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-400">
                       Ahmed Calif
                     </span>
@@ -714,27 +704,28 @@ export default function Portfolio(): React.ReactElement {
                 className="space-y-6"
               >
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Hello, my name is Ahmed Calif. I'm an aspiring full-stack
+                  Hello, my name is Ahmed Calif. I&apos;m an aspiring full-stack
                   developer who recently completed my diploma in web development
-                  at BCIT. I'm passionate about creating production-ready web
-                  applications that solve real-world problems.
+                  at BCIT. I&apos;m passionate about creating production-ready
+                  web applications that solve real-world problems.
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  When I'm not coding, you'll find me on the basketball court, a
-                  passion I've had since childhood. Basketball taught me the
-                  value of teamwork, patience, and performing under pressure,
-                  skills that translate perfectly into web development.
+                  When I&apos;m not coding, you&apos;ll find me on the
+                  basketball court, a passion I&apos;ve had since childhood.
+                  Basketball taught me the value of teamwork, patience, and
+                  performing under pressure, skills that translate perfectly
+                  into web development.
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                   While I may not be the most naturally gifted player, my love
                   for the game keeps me returning. I bring that same dedication
                   to development. There is nothing quite like creating something
-                  that impacts people's lives. It's what drives me to keep
-                  learning and growing as a developer.
+                  that impacts people&apos;s lives. It&apos;s what drives me to
+                  keep learning and growing as a developer.
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Are you looking for a developer who's passionate about
-                  creating impactful solutions? Let's connect!
+                  Are you looking for a developer who&apos;s passionate about
+                  creating impactful solutions? Let&apos;s connect!
                 </p>
               </motion.div>
 
@@ -817,7 +808,7 @@ export default function Portfolio(): React.ReactElement {
               <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
               <div className="h-1 w-20 bg-black dark:bg-white mx-auto mb-4"></div>
               <p className="text-lg text-gray-600 dark:text-gray-300">
-                Interested in collaborating or commissioning a piece? Let's
+                Interested in collaborating or commissioning a piece? Let&apos;s
                 create something amazing together.
               </p>
             </motion.div>
