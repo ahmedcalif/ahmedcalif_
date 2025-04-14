@@ -140,7 +140,6 @@ const skills: Skill[] = [
   { name: "SQLite", icon: "/SQLite.svg" },
 ];
 
-// Updated ProjectCarousel component with fixed image display to match the dark design
 const ProjectCarousel: React.FC<ProjectCarouselProps> = ({ projects }) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [projectsPerPage, setProjectsPerPage] = useState<number>(3);
@@ -216,7 +215,6 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({ projects }) => {
             key={project.id}
             className="flex flex-col rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300"
           >
-            {/* Top image section */}
             <div className="relative h-48 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center p-4">
               <div className="w-full h-full flex items-center justify-center">
                 <Image
