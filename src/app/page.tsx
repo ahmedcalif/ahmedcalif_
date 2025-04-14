@@ -116,7 +116,7 @@ const projects: Project[] = [
     description:
       "Discover and save recipes based on available ingredients and dietary preferences",
     tags: ["PHP", "Laravel", "React", "MySQL", "Tailwind CSS"],
-    image: "linuxlogo.svg",
+    image: "linux-svgrepo-com.svg",
     link: "/in-progress",
     github: "https://github.com/ahmedcalif/ArticleOS",
   },
