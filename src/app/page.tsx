@@ -78,7 +78,7 @@ const projects: Project[] = [
     description:
       "A full-stack MySQL learning platform with student progress ability",
     tags: ["React", "TypeScript", "MySQL", "Hono", "Tailwind CSS"],
-    image: "sql.svg",
+    image: "sql-database-sql-azure-svgrepo-com.svg",
     link: "https://learnsql-production.up.railway.app/",
   },
   {
@@ -97,7 +97,7 @@ const projects: Project[] = [
     description:
       "A collaborative platform for any and all Do-It-Yourself projects from home improvement to everyday crafting",
     tags: ["JavaScript", "ExpressJs", "CSS", "HTML", "Drizzle"],
-    image: "CraftersConnectLogo.svg",
+    image: "/CraftersConnectLogo.png",
     link: "https://craftersconnect-1.onrender.com/",
     github: "https://github.com/ahmedcalif/CraftersConnect",
   },
