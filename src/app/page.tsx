@@ -31,16 +31,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ModeToggle } from "@/components/Global/ThemeToggle";
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-  image: string;
-  link?: string;
-  github?: string;
-}
+import { type Project, projects as project } from "./data/projects";
+import Link from "next/link";
 
 interface Skill {
   name: string;
@@ -70,57 +62,6 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "SQLLearn",
-    description:
-      "A full-stack MySQL learning platform with student progress ability",
-    tags: ["React", "TypeScript", "MySQL", "Hono", "Tailwind CSS"],
-    image: "sql-database-sql-azure-svgrepo-com.svg",
-    link: "https://learnsql-production.up.railway.app/",
-  },
-  {
-    id: 2,
-    title: "ReachOut",
-    description:
-      "An AI-Powered job searching app for individuals affected by the justice system.",
-    tags: ["Next.js", "TypeScript", "Tailwind", "SQLite", "AWS", "Azure AI"],
-    image: "logo.svg",
-    link: "https://wereachout.ca ",
-    github: "https://github.com/mangaslave/ReachOut",
-  },
-  {
-    id: 3,
-    title: "Crafters Connect",
-    description:
-      "A collaborative platform for any and all Do-It-Yourself projects from home improvement to everyday crafting",
-    tags: ["JavaScript", "ExpressJs", "CSS", "HTML", "Drizzle"],
-    image: "/CraftersConnectLogo.png",
-    link: "https://craftersconnect-1.onrender.com/",
-    github: "https://github.com/ahmedcalif/CraftersConnect",
-  },
-  {
-    id: 5,
-    title: "BankingApp",
-    description:
-      "A productivity app with task categorization, reminders and progress tracking",
-    tags: ["React Native", "Expo", "TypeScript"],
-    image: "money-svgrepo-com.svg",
-    github: "https://github.com/ahmedcalif/React-Native-Bank-App",
-  },
-  {
-    id: 6,
-    title: "ArticleOS",
-    description:
-      "Discover and save recipes based on available ingredients and dietary preferences",
-    tags: ["PHP", "Laravel", "React", "MySQL", "Tailwind CSS"],
-    image: "linux-svgrepo-com.svg",
-    link: "/in-progress",
-    github: "https://github.com/ahmedcalif/ArticleOS",
-  },
-];
 
 const skills: Skill[] = [
   { name: "React", icon: "/react-2.svg" },
@@ -215,18 +156,20 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({ projects }) => {
             key={project.id}
             className="flex flex-col rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300"
           >
-            <div className="relative h-48 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center p-4">
-              <div className="w-full h-full flex items-center justify-center">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={200}
-                  height={150}
-                  className="object-contain max-h-40 max-w-full"
-                  style={{ objectFit: "contain" }}
-                />
+            <Link href={`/projects/${project.id}`} className="block">
+              <div className="relative h-48 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center p-4 cursor-pointer">
+                <div className="w-full h-full flex items-center justify-center">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    width={200}
+                    height={150}
+                    className="object-contain max-h-40 max-w-full"
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* Content section */}
             <div className="p-6 flex flex-col flex-grow">
@@ -789,7 +732,7 @@ export default function Portfolio(): React.ReactElement {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <ProjectCarousel projects={projects} />
+              <ProjectCarousel projects={project} />
             </motion.div>
           </div>
         </Section>
