@@ -124,9 +124,9 @@ const projects: Project[] = [
 
 const skills: Skill[] = [
   { name: "React", icon: "/react-2.svg" },
-  { name: "Next.js", icon: "/next.svg" },
+  { name: "Next.js", icon: "/nextjs-svgrepo-com.svg" },
   { name: "TypeScript", icon: "/typescript.svg" },
-  { name: "Node.js", icon: "/nodejs.svg" },
+  { name: "Node.js", icon: "/nodejs-1-logo-svgrepo-com.svg" },
   { name: "Tailwind CSS", icon: "/tailwind-css-2.svg" },
   { name: "HTML5", icon: "/html-1.svg" },
   { name: "CSS3", icon: "/css-3.svg" },
@@ -385,7 +385,7 @@ export default function Portfolio(): React.ReactElement {
     "    fetchProjects().then(data => setProjects(data));",
     "  }, []);",
     "",
-    '  return "<Ahmed.Projects />";',
+    "  return <Ahmed.Projects />;",
     "};",
   ];
 
@@ -476,8 +476,8 @@ export default function Portfolio(): React.ReactElement {
             <ul className="flex space-x-8">
               {[
                 { id: "home", label: "Home" },
-                { id: "about", label: "About" },
                 { id: "projects", label: "Projects" },
+                { id: "about", label: "About" },
                 { id: "contact", label: "Contact" },
               ].map((item) => (
                 <li key={item.id}>
@@ -750,8 +750,8 @@ export default function Portfolio(): React.ReactElement {
                         <Image
                           src={skill.icon}
                           alt={skill.name}
-                          width={48}
-                          height={48}
+                          width={100}
+                          height={100}
                           className="object-contain"
                         />
                       </div>
