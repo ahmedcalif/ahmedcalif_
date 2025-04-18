@@ -280,6 +280,12 @@ export default function Portfolio(): React.ReactElement {
     ["0%", "100%"]
   );
 
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
+
   const homeRef = useRef<HTMLElement | null>(null);
   const aboutRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
@@ -313,10 +319,41 @@ export default function Portfolio(): React.ReactElement {
     },
   });
 
-  function onSubmit(values: FormValues): void {
-    console.log(values);
-    alert("Form submitted successfully! (This is a demo alert)");
-    form.reset();
+  async function onSubmit(values: FormValues): Promise<void> {
+    try {
+      setSubmitting(true);
+
+      const formData = {
+        ...values,
+        subject: "Portfolio Contact Form",
+      };
+
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to send message");
+      }
+
+      // Show success message
+      setSubmitStatus({ success: true, message: "Message sent successfully!" });
+      form.reset();
+    } catch (error) {
+      // Show error message
+      setSubmitStatus({
+        success: false,
+        message:
+          error instanceof Error ? error.message : "Failed to send message",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const codeLines: string[] = [
@@ -816,11 +853,31 @@ export default function Portfolio(): React.ReactElement {
                           </FormItem>
                         )}
                       />
+                      {submitStatus && (
+                        <div
+                          className={`p-4 mb-4 rounded-md ${
+                            submitStatus.success
+                              ? "bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-400"
+                              : "bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-400"
+                          }`}
+                        >
+                          {submitStatus.message}
+                        </div>
+                      )}
+
                       <Button
                         type="submit"
                         className="w-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
+                        disabled={submitting}
                       >
-                        Send Message
+                        {submitting ? (
+                          <>
+                            <span className="animate-spin mr-2">⟳</span>
+                            Sending...
+                          </>
+                        ) : (
+                          "Send Message"
+                        )}
                       </Button>
                     </form>
                   </Form>

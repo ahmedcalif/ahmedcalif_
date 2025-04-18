@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Github, ExternalLink, ChevronLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 interface Params {
   params: {
@@ -28,10 +29,10 @@ export default async function ProjectDetails({ params }: Params) {
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <Button variant="outline" size="sm" asChild>
-            <a href="/#projects" className="flex items-center">
+            <Link href="/#projects" className="flex items-center">
               <ChevronLeft className="mr-2 h-4 w-4" />
               Back to Projects
-            </a>
+            </Link>
           </Button>
         </div>
 
