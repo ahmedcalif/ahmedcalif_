@@ -1,3 +1,5 @@
+import { ProdPushLogo } from "@/components/ProdPushLogo";
+import React from "react";
 export interface Project {
   id: number;
   title: string;
@@ -5,6 +7,7 @@ export interface Project {
   tags: string[];
   image: string;
   images?: string[];
+  imageComponent?: React.ReactNode;
   link?: string;
   github?: string;
   details: string;
@@ -36,16 +39,18 @@ export const projects: Project[] = [
       "Implementing a secure SQL execution environment",
       "Designing an intuitive user interface for complex queries",
       "Managing student progress data efficiently",
+      "Adapting to a new tech stack ",
     ],
     solutions: [
-      "Created a sandboxed execution environment using Docker containers",
-      "Developed a multi-pane interface with query input and results side-by-side",
-      "Implemented a Redis cache for frequently accessed progress data",
+      "Created a separate database to protect the main database from attacks",
+      "Followed design best practices",
+      "Implemented a chart for teacher to access the student progress",
+      "Asked for help, and read documentation if I was stuck",
     ],
     lessons: [
       "Importance of proper input sanitization for SQL queries",
       "Value of immediate feedback in learning interfaces",
-      "Benefits of containerization for educational platforms",
+      "Reduce the amount of features implemented",
     ],
   },
   {
@@ -62,13 +67,12 @@ export const projects: Project[] = [
     features: [
       "AI-powered job matching algorithm",
       "Resume builder with template suggestions",
-      "Interview preparation chatbot",
-      "Employer education resources",
+      "Employer tracking for the job applicants",
     ],
     challenges: [
-      "Handling sensitive user data with proper privacy controls",
-      "Integrating multiple AI services (Azure and OpenAI)",
-      "Creating fair matching algorithms that don't perpetuate bias",
+      "Deciding on the idea",
+      "Integrating multiple AI services (Azure)",
+      " ",
     ],
     solutions: [
       "Implemented robust encryption and access controls",
@@ -121,20 +125,16 @@ export const projects: Project[] = [
     image: "/money-svgrepo-com.svg",
     github: "https://github.com/ahmedcalif/React-Native-Bank-App",
     details:
-      "A mobile banking application that provides users with a secure way to manage their finances, track spending, and set savings goals. The app includes transaction categorization and financial insights.",
+      "A mobile banking application that provides users a way to manage their finances, track spending, and set savings goals. The app includes transaction categorization and financial insights.",
     features: [
-      "Secure authentication with biometric options",
       "Transaction categorization and analytics",
-      "Savings goals with progress tracking",
-      "Budgeting tools with alerts",
+      "Separation of bank account",
     ],
     challenges: [
-      "Implementing secure authentication flows",
-      "Handling sensitive financial data",
       "Creating performant data visualizations",
+      "Trying out a completely different tech stack, adventure",
     ],
     solutions: [
-      "Used React Native's SecureStore for credential management",
       "Implemented data encryption at rest and in transit",
       "Leveraged Skia for high-performance charts",
     ],
@@ -174,6 +174,41 @@ export const projects: Project[] = [
       "Complexity of academic reference management",
       "Value of good annotation tools for research",
       "Importance of flexible data models for knowledge systems",
+    ],
+  },
+  {
+    id: 6,
+    title: "ProdPush",
+    description:
+      "Task manager application with interactive kanban board for visual workflow management",
+    tags: ["React", "TypeScript", "SQLite", "Hono", "Tailwind CSS"],
+    image: "/linux-svgrepo-com.svg",
+    imageComponent: React.createElement(ProdPushLogo, {
+      className: "w-full h-full text-blue-600 dark:text-blue-400",
+    }),
+    github: "https://github.com/ahmedcalif/ProdPush_",
+    details:
+      "ProdPush is a task management application featuring a customizable kanban board that allows users to visually track work progress across different stages. The app provides an intuitive drag-and-drop interface for managing tasks through their lifecycle.",
+    features: [
+      "Interactive kanban board with customizable columns",
+      "Drag-and-drop task management",
+      "Task creation with priority levels and due dates",
+      "Category and label organization",
+    ],
+    challenges: [
+      "Implementing smooth drag-and-drop functionality",
+      "Persisting board state across sessions",
+      "Creating an intuitive workflow for task transitions",
+    ],
+    solutions: [
+      "Used React DnD for drag-and-drop interactions",
+      "Implemented SQLite with efficient state management",
+      "Designed intuitive UI patterns for task movement between columns",
+    ],
+    lessons: [
+      "Importance of visual workflow management",
+      "Value of interactive UI elements for productivity",
+      "Benefits of customizable workflow stages",
     ],
   },
 ];

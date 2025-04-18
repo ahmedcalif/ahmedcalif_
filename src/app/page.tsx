@@ -159,19 +159,22 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({ projects }) => {
             <Link href={`/projects/${project.id}`} className="block">
               <div className="relative h-48 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center p-4 cursor-pointer">
                 <div className="w-full h-full flex items-center justify-center">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    width={200}
-                    height={150}
-                    className="object-contain max-h-40 max-w-full"
-                    style={{ objectFit: "contain" }}
-                  />
+                  {project.id === 6 && project.imageComponent ? (
+                    project.imageComponent
+                  ) : (
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      width={200}
+                      height={150}
+                      className="object-contain max-h-40 max-w-full"
+                      style={{ objectFit: "contain" }}
+                    />
+                  )}
                 </div>
               </div>
             </Link>
 
-            {/* Content section */}
             <div className="p-6 flex flex-col flex-grow">
               <div className="mb-4">
                 <h3 className="text-xl font-bold mb-2">{project.title}</h3>

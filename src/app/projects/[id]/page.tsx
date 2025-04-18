@@ -36,18 +36,21 @@ export default async function ProjectDetails({ params }: Params) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          {/* Project Gallery */}
           <div className="lg:order-2 space-y-4">
             <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="relative h-64 md:h-96 w-full flex items-center justify-center p-4">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={800}
-                  height={600}
-                  className="object-contain max-h-full max-w-full"
-                  priority
-                />
+                {project.id === 6 && project.imageComponent ? (
+                  project.imageComponent
+                ) : (
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    width={800}
+                    height={600}
+                    className="object-contain max-h-full max-w-full"
+                    priority
+                  />
+                )}
               </div>
             </div>
 
@@ -70,8 +73,6 @@ export default async function ProjectDetails({ params }: Params) {
               </div>
             )}
           </div>
-
-          {/* Project Info */}
           <div className="lg:order-1">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {project.title}
@@ -201,23 +202,6 @@ export default async function ProjectDetails({ params }: Params) {
             </CardContent>
           </Card>
         )}
-
-        {/* Testimonial Section (placeholder - add real testimonials if available) */}
-        <Card className="bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-          <CardHeader>
-            <CardTitle>What People Say</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <blockquote className="italic text-gray-600 dark:text-gray-300">
-              "This project demonstrates excellent problem-solving skills and
-              attention to detail. The implementation shows deep understanding
-              of both technical and user experience considerations."
-            </blockquote>
-            <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              — Project Stakeholder
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
