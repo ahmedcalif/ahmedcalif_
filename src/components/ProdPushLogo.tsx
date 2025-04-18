@@ -1,6 +1,8 @@
 import type React from "react";
 
-interface ProdPushLogoProps extends React.SVGProps<SVGSVGElement> {}
+interface ProdPushLogoProps extends React.SVGProps<SVGSVGElement> {
+  className?: string;
+}
 
 export function ProdPushLogo({ className, ...props }: ProdPushLogoProps) {
   return (

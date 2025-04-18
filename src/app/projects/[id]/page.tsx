@@ -8,22 +8,17 @@ import { Github, ExternalLink, ChevronLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 
-interface Params {
-  params: {
-    id: string;
-  };
+interface ProjectPageProps {
+  params: Promise<{ id: string }>;
 }
 
-export default async function ProjectDetails({ params }: Params) {
-  const projectParams = await params;
-  const project = await projects.find(
-    (p) => p.id.toString() === projectParams.id
-  );
+export default async function ProjectDetails({ params }: ProjectPageProps) {
+  const { id } = await params;
+  const project = projects.find((p) => p.id.toString() === id);
 
   if (!project) {
     return notFound();
   }
-
   return (
     <div className="container mx-auto px-4 py-12 md:py-20">
       <div className="max-w-6xl mx-auto">
