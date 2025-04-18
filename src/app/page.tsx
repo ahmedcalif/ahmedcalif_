@@ -67,7 +67,7 @@ const skills: Skill[] = [
   { name: "React", icon: "/react-2.svg" },
   { name: "Next.js", icon: "/nextjs-svgrepo-com.svg" },
   { name: "TypeScript", icon: "/typescript.svg" },
-  { name: "Node.js", icon: "/nodejs-1-logo-svgrepo-com.svg" },
+  { name: "Node.js", icon: "/Node.js_logo.svg.png" },
   { name: "Tailwind CSS", icon: "/tailwind-css-2.svg" },
   { name: "HTML5", icon: "/html-1.svg" },
   { name: "CSS3", icon: "/css-3.svg" },
@@ -216,7 +216,7 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({ projects }) => {
                     </a>
                   </Button>
                 ) : (
-                  <div></div> /* Empty div to maintain spacing */
+                  <div></div>
                 )}
 
                 {project.link && project.link !== "#" ? (
@@ -236,7 +236,7 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({ projects }) => {
                     </a>
                   </Button>
                 ) : (
-                  <div></div> /* Empty div to maintain spacing */
+                  <div></div>
                 )}
               </div>
             </div>
@@ -684,6 +684,7 @@ export default function Portfolio(): React.ReactElement {
                 </h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-6">
                   {skills.map((skill, index) => (
+                    // Replace the existing skill icon container with this:
                     <motion.div
                       key={skill.name}
                       initial={{ opacity: 0, y: 20 }}
@@ -692,13 +693,14 @@ export default function Portfolio(): React.ReactElement {
                       viewport={{ once: true }}
                       className="flex flex-col items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <div className="h-12 w-12 p-2 relative mb-3">
+                      <div className="h-16 w-16 flex items-center justify-center mb-3">
                         <Image
                           src={skill.icon}
                           alt={skill.name}
-                          width={100}
-                          height={100}
-                          className="object-contain"
+                          width={48}
+                          height={48}
+                          className="object-contain w-full h-full"
+                          style={{ objectFit: "contain" }}
                         />
                       </div>
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
